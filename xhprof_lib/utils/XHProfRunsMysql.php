@@ -60,17 +60,32 @@ class XHProfRunsMysql implements iXHProfRuns
         return $this->pdo->lastInsertId();
     }
 
-    function list_runs()
+    function list_runs(int $page)
     {
-        $st = $this->pdo->query('
+        $limit = 50;
+        $st = $this->pdo->prepare('
             SELECT run_id, route, created_at
-            FROM xhprof_log
+            FROM xhprof_log        
             ORDER BY run_id DESC
+            LIMIT :rowLimit OFFSET :offsetRow 
         ');
+        $st->bindValue('rowLimit', $limit, \PDO::PARAM_INT);
+        $st->bindValue('offsetRow', ($page - 1) * $limit, \PDO::PARAM_INT);
+        $st->execute();
         echo "<hr/>Existing runs:\n<ul>\n";
         while ($row = $st->fetch(\PDO::FETCH_ASSOC)) {
             echo '<li><a href="'.htmlentities($_SERVER['SCRIPT_NAME']).'?run='.htmlentities($row['run_id']).'">'
                 .htmlentities($row['route']).'</a><small> '.\date('Y-m-d H:i:s', $row['created_at'])."</small></li>\n";
+        }
+        echo "</ul>\n";
+
+        $st = $this->pdo->query('SELECT count(*) FROM xhprof_log');
+        $totalCount = $st->fetchColumn();
+
+        $totalPages = \intdiv($totalCount, $limit) + 1;
+
+        for ($i = 1; $i<=$totalPages; $i++) {
+            echo '[<a href="'.htmlentities($_SERVER['SCRIPT_NAME']).'?listPage='.$i.'">'.$i.'</a>], ';
         }
     }
 

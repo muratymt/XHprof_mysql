@@ -51,6 +51,7 @@ $params = [
     'run2' => [XHProfLib::XHPROF_STRING_PARAM, ''],
     'source' => [XHProfLib::XHPROF_STRING_PARAM, 'xhprof'],
     'all' => [XHProfLib::XHPROF_UINT_PARAM, 0],
+    'listPage' => [XHProfLib::XHPROF_UINT_PARAM, 1]
 ];
 
 // pull values of these params, and create named globals for each param

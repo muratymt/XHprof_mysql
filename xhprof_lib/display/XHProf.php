@@ -1396,7 +1396,7 @@ class XHProf
             } else {
                 echo "No XHProf runs specified in the URL.";
                 if (method_exists($xhprof_runs_impl, 'list_runs')) {
-                    $xhprof_runs_impl->list_runs();
+                    $xhprof_runs_impl->list_runs($url_params['listPage'] ?? 1);
                 }
             }
         }
