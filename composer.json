@@ -1,0 +1,17 @@
+{
+    "name": "admin/xhprof",
+    "authors": [
+        {
+            "name": "murat",
+            "email": "murat.yeskendirov@yandex.ru"
+        }
+    ],
+    "require": {
+        "php": ">7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "xhprof\\lib\\": "xhprof_lib"
+        }
+    }
+}
