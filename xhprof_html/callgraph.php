@@ -33,7 +33,7 @@
 // are at the same level.
 use xhprof\lib\utils\CallGraphUtils;
 use xhprof\lib\utils\XHProfLib;
-use xhprof\lib\utils\XHProfRunsDefault;
+use xhprof\lib\utils\XHProfRunsMysql;
 
 $GLOBALS['XHPROF_LIB_ROOT'] = dirname(__FILE__) . '/../xhprof_lib';
 
@@ -82,7 +82,15 @@ if (!array_key_exists($type, CallGraphUtils::$xhprof_legal_image_types)) {
   $type = $params['type'][1]; // default image type.
 }
 
-$xhprof_runs_impl = new XHProfRunsDefault('/xhprof');
+require 'config.php';
+
+$db = new \PDO(
+    'mysql:host=' . $config['dbHost'] . ';dbname=' . $config['dbName'],
+    $config['dbUser'],
+    $config['dbPass']
+);
+
+$xhprof_runs_impl = new XHProfRunsMysql($db);
 
 if (!empty($run)) {
   // single run call graph image generation

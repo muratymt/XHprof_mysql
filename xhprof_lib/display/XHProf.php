@@ -479,6 +479,7 @@ class XHProf
 
         // set up the action links for operations that can be done on this report
         $links = [];
+        $links [] = self::xhprof_render_link('Home', '/');
         $links [] = self::xhprof_render_link("View Top Level $diff_text Report",
             $top_link_query_string);
 

@@ -1,3 +1,4 @@
 /.idea
 /vendor
 /composer.lock
+/xhprof_html/config.php

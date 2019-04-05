@@ -35,7 +35,7 @@
 // are at the same level.
 use xhprof\lib\display\XHProf;
 use xhprof\lib\utils\XHProfLib;
-use xhprof\lib\utils\XHProfRunsDefault;
+use xhprof\lib\utils\XHProfRunsMysql;
 
 $GLOBALS['XHPROF_LIB_ROOT'] = dirname(__FILE__).'/../xhprof_lib';
 
@@ -85,7 +85,15 @@ $vbbar = ' class="vbbar"';
 $vrbar = ' class="vrbar"';
 $vgbar = ' class="vgbar"';
 
-$xhprof_runs_impl = new XHProfRunsDefault('/xhprof');
+require 'config.php';
+
+$db = new \PDO(
+    'mysql:host=' . $config['dbHost'] . ';dbname=' . $config['dbName'],
+    $config['dbUser'],
+    $config['dbPass']
+);
+
+$xhprof_runs_impl = new XHProfRunsMysql($db);
 
 XHProf::displayXHProfReport($xhprof_runs_impl, $params, $source, $run, $wts, $symbol, $sort, $run1, $run2);
 

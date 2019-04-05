@@ -33,8 +33,8 @@ class XHProfRunsMysql implements iXHProfRuns
             $run_desc = "Invalid Run Id = $run_id";
             return null;
         }
-        $run_desc = "XHProf Run (Namespace=$type)";
-        return \json_decode($data, true);
+        $run_desc = "XHProf Run (Route={$data['route']})";
+        return \json_decode($data['xhprof_data'], true);
     }
 
     /**
@@ -72,5 +72,14 @@ class XHProfRunsMysql implements iXHProfRuns
             echo '<li><a href="'.htmlentities($_SERVER['SCRIPT_NAME']).'?run='.htmlentities($row['run_id']).'">'
                 .htmlentities($row['route']).'</a><small> '.\date('Y-m-d H:i:s', $row['created_at'])."</small></li>\n";
         }
+    }
+
+    public function garbage_collection($beforeTime)
+    {
+        $st = $this->pdo->prepare('
+            DELETE FROM xhprof_log 
+            WHERE created_at < :created_at
+        ');
+        $st->execute(['created_at' => $beforeTime]);
     }
 }
