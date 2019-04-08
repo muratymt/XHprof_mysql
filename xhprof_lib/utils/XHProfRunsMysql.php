@@ -2,6 +2,8 @@
 
 namespace xhprof\lib\utils;
 
+use xhprof\lib\display\XHProf;
+
 class XHProfRunsMysql implements iXHProfRuns
 {
     /** @var \PDO */
@@ -62,7 +64,7 @@ class XHProfRunsMysql implements iXHProfRuns
 
     function list_runs(int $page)
     {
-        $limit = 50;
+        $limit = 100;
         $st = $this->pdo->prepare('
             SELECT run_id, route, created_at
             FROM xhprof_log        
@@ -72,10 +74,19 @@ class XHProfRunsMysql implements iXHProfRuns
         $st->bindValue('rowLimit', $limit, \PDO::PARAM_INT);
         $st->bindValue('offsetRow', ($page - 1) * $limit, \PDO::PARAM_INT);
         $st->execute();
-        echo "<hr/>Existing runs:\n<ul>\n";
+        echo "<hr/>Existing runs:\n";
+        echo '<label><input type="checkbox" class="jsAllRunsSelect"> Select all</label> ';
+        echo '<button class="jsShowSomeRuns">Show selected</button> ';
+        echo "<ul>\n";
         while ($row = $st->fetch(\PDO::FETCH_ASSOC)) {
-            echo '<li><a href="'.htmlentities($_SERVER['SCRIPT_NAME']).'?run='.htmlentities($row['run_id']).'">'
-                .htmlentities($row['route']).'</a><small> '.\date('Y-m-d H:i:s', $row['created_at'])."</small></li>\n";
+            echo '<li>';
+            echo '<input type="checkbox" class="jsRuns" data-id="'.htmlentities($row['run_id']).'">';
+            echo XHProf::xhprof_render_link(
+                htmlentities($row['route']),
+                htmlentities($_SERVER['SCRIPT_NAME']).'?run='.htmlentities($row['run_id'])
+            );
+            echo '<small> '.\date('Y-m-d H:i:s', $row['created_at']).'</small>';
+            echo '</li>';
         }
         echo "</ul>\n";
 
@@ -84,7 +95,7 @@ class XHProfRunsMysql implements iXHProfRuns
 
         $totalPages = \intdiv($totalCount, $limit) + 1;
 
-        for ($i = 1; $i<=$totalPages; $i++) {
+        for ($i = 1; $i <= $totalPages; $i++) {
             echo '[<a href="'.htmlentities($_SERVER['SCRIPT_NAME']).'?listPage='.$i.'">'.$i.'</a>], ';
         }
     }

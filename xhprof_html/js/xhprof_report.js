@@ -178,27 +178,46 @@ function ChildRowToolTip(cell, metric)
   return s;
 }
 
-$(document).ready(function() {
-  $('td[@metric]').tooltip(
-    { bodyHandler: function() {
+$(document).ready(function () {
+  $(document).tooltip(
+      {
+        items: "td[metric]",
+        content: function () {
           var type = $(this).attr('type');
           var metric = $(this).attr('metric');
           if (type == 'Parent') {
-             return ParentRowToolTip(this, metric);
+            return ParentRowToolTip(this, metric);
           } else if (type == 'Child') {
-             return ChildRowToolTip(this, metric);
+            return ChildRowToolTip(this, metric);
           }
-      },
-      showURL : false
-    });
-  var cur_params = {} ;
-  $.each(location.search.replace('?','').split('&'), function(i, x) {
-    var y = x.split('='); cur_params[y[0]] = y[1];
+        },
+        showURL: false
+      });
+  var cur_params = {};
+  $.each(location.search.replace('?', '').split('&'), function (i, x) {
+    var y = x.split('=');
+    cur_params[y[0]] = y[1];
   });
-  $('input.function_typeahead')
-    .autocomplete('typeahead.php', { extraParams : cur_params })
-    .result(function(event, item) {
-      cur_params['symbol'] = item;
-      location.search = '?' + jQuery.param(cur_params);
+  $(document).on('change', 'input.jsAllRunsSelect', function (e) {
+    e.preventDefault();
+    const checked = $(this).is(':checked');
+    $('.jsRuns').each(function () {
+      $(this).prop('checked', checked);
     });
+  });
+  $(document).on('click', 'button.jsShowSomeRuns', function (e) {
+    e.preventDefault();
+    let runs = '';
+    $('.jsRuns').each(function () {
+      if ($(this).is(':checked')) {
+        if (runs !== '') {
+          runs += ',';
+        }
+        runs += $(this).data('id');
+      }
+    });
+    if (runs !== '') {
+      window.location = '?run=' + runs;
+    }
+  });
 });

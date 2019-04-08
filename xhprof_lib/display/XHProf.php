@@ -205,20 +205,16 @@ class XHProf
         }
 
         // style sheets
-        echo "<link href='$ui_dir_url_path/css/xhprof.css' rel='stylesheet' ".
-            " type='text/css' />";
-        echo "<link href='$ui_dir_url_path/jquery/jquery.tooltip.css' ".
-            " rel='stylesheet' type='text/css' />";
-        echo "<link href='$ui_dir_url_path/jquery/jquery.autocomplete.css' ".
-            " rel='stylesheet' type='text/css' />";
+        echo "<link href='$ui_dir_url_path/css/xhprof.css' rel='stylesheet' "." type='text/css' />";
+        echo "<link href='$ui_dir_url_path/css/jquery-ui.min.css' "." rel='stylesheet' type='text/css' />";
+        //echo "<link href='$ui_dir_url_path/jquery/jquery.autocomplete.css' "." rel='stylesheet' type='text/css' />";
 
         // javascript
-        echo "<script src='$ui_dir_url_path/jquery/jquery-1.2.6.js'>".
-            "</script>";
-        echo "<script src='$ui_dir_url_path/jquery/jquery.tooltip.js'>".
-            "</script>";
-        echo "<script src='$ui_dir_url_path/jquery/jquery.autocomplete.js'>"
-            ."</script>";
+        //echo "<script src='$ui_dir_url_path/jquery/jquery-1.2.6.js'>"."</script>";
+        //echo "<script src='$ui_dir_url_path/jquery/jquery.tooltip.js'>"."</script>";
+        echo "<script src='$ui_dir_url_path/jquery/jquery-3.3.1.min.js'>"."</script>";
+        echo "<script src='$ui_dir_url_path/jquery/jquery-ui.min.js'>"."</script>";
+        //echo "<script src='$ui_dir_url_path/jquery/jquery.autocomplete.js'>"."</script>";
         echo "<script src='$ui_dir_url_path/js/xhprof_report.js'></script>";
     }
 
@@ -1263,8 +1259,7 @@ class XHProf
 
         XHProfLib::init_metrics($xhprof_data, $rep_symbol, $sort, false);
 
-        self::profiler_report($url_params, $rep_symbol, $sort, $run, $run_desc,
-            $xhprof_data);
+        self::profiler_report($url_params, $rep_symbol, $sort, $run, $run_desc, $xhprof_data);
     }
 
     /**
@@ -1364,8 +1359,7 @@ class XHProf
                 } else {
                     $wts_array = null;
                 }
-                $data = XHProfLib::xhprof_aggregate_runs($xhprof_runs_impl,
-                    $runs_array, $wts_array, $source, false);
+                $data = XHProfLib::xhprof_aggregate_runs($xhprof_runs_impl, $runs_array, $wts_array, $source, false);
                 $xhprof_data = $data['raw'];
                 $description = $data['description'];
             }
